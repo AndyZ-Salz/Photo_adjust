@@ -23,5 +23,13 @@ def thumbnail(input_pic, output_pic):
     im.save(output_pic, "JPEG")
 
 
+def read_exif(input_pic):
+    im = Image.open(input_pic)
+    print(im.info)
+
+
+
 if __name__ == '__main__':
-    thumbnail("Demo_pic.jpg", "output/thumbnail.jpg")
+    demo_pic ="Demo_pic.jpg"
+    # thumbnail(demo_pic, "output/thumbnail.jpg")
+    read_exif(demo_pic)
