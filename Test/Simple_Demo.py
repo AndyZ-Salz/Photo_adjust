@@ -14,6 +14,7 @@
 
 
 from PIL import Image
+from PIL import ExifTags
 
 
 def thumbnail(input_pic, output_pic):
@@ -25,11 +26,22 @@ def thumbnail(input_pic, output_pic):
 
 def read_exif(input_pic):
     im = Image.open(input_pic)
-    print(im.info)
+    # im_exif = im.info['exif']
+    # im_exif = im._getexif()
+    # im_exif.decode() # bytes to string
 
+    exif = {
+        ExifTags.TAGS[k]: v for k, v in im._getexif().items() if k in ExifTags.TAGS
+    }
+
+    print(str(exif))
+
+    exif_ver = exif['ExifVersion']
+
+    print(exif_ver.decode())
 
 
 if __name__ == '__main__':
-    demo_pic ="Demo_pic.jpg"
+    demo_pic = "Demo_pic.jpg"
     # thumbnail(demo_pic, "output/thumbnail.jpg")
     read_exif(demo_pic)
