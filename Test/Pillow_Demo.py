@@ -40,8 +40,12 @@ def read_exif(input_pic):
 
     print(exif_ver.decode())
 
+def Watermark():
+    pass
+
+
 
 if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
-    # thumbnail(demo_pic, "output/thumbnail.jpg")
-    read_exif(demo_pic)
+    thumbnail(demo_pic, "output/thumbnail.jpg")
+    # read_exif(demo_pic)
