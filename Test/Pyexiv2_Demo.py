@@ -14,20 +14,56 @@
 
 from pyexiv2 import Image
 
+
 def read_exif(input_pic):
     img = Image(input_pic)
     data = img.read_exif()
+    print(data)
     img.close()
     return data
 
 
 def write_exif(exif_data):
     img = Image("output/thumbnail.jpg")
+    img.clear_exif()
     img.modify_exif(exif_data)
     img.close()
 
 
+def new_exif(exif_data):
+    exif_modify = ['Exif.Image.Software']
+    exif_retain = ['Exif.Image.Make',
+                   'Exif.Image.Model',
+                   'Exif.Image.Orientation',
+                   'Exif.Image.ExifTag',
+                   'Exif.Photo.ExposureTime',
+                   'Exif.Photo.FNumber',
+                   'Exif.Photo.ExposureProgram',
+                   'Exif.Photo.ISOSpeedRatings',
+                   'Exif.Photo.DateTimeDigitized',
+                   'Exif.Photo.BodySerialNumber',
+                   'Exif.Photo.LensSpecification',
+                   'Exif.Photo.LensModel'
+                   ]
+
+    new_exif_data = {}
+
+    # exif_modify
+    new_exif_data['Exif.Image.Software'] = "Andy Z's Python Code"
+
+    # exif_retain
+    for exif_item in exif_retain:
+        new_exif_data[exif_item] = exif_data[exif_item]
+
+    return new_exif_data
+
+
 if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
-    exif_data=read_exif(demo_pic)
-    write_exif(exif_data)
+    exif_data = read_exif(demo_pic)
+
+    new_exif_data = new_exif(exif_data)
+    print(new_exif_data)
+
+    write_exif(new_exif_data)
+    read_exif("output/thumbnail.jpg")
