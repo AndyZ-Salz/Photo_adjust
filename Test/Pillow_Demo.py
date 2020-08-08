@@ -40,8 +40,10 @@ def read_exif(input_pic):
 
     print(exif_ver.decode())
 
-def Watermark():
+def water_mark():
     pass
+
+
 
 
 
