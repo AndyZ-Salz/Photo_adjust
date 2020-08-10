@@ -36,7 +36,9 @@ width = 60 * 4
 height = 60
 image = Image.new('RGB', (width, height), (255, 255, 255))
 # 创建Font对象:
-font = ImageFont.truetype('COOPBL.TTF', 36)
+# font = ImageFont.truetype('COOPBL.TTF', 36)
+font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 36)
+
 # 创建Draw对象:
 draw = ImageDraw.Draw(image)
 # 填充每个像素:
