@@ -35,7 +35,7 @@ def rndColor2():
 width = 60 * 4
 height = 60
 image = Image.new('RGB', (width, height), (255, 255, 255))
-# 创建Font对象:
+# 创建Font对象: #当直接字体名字找不到时可用绝对路径
 # font = ImageFont.truetype('COOPBL.TTF', 36)
 font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 36)
 

@@ -15,12 +15,12 @@
 from PIL import Image as pillowImage
 from pyexiv2 import Image as exifImage
 
-
+# 用pillow读取图片
 def load_image(raw_pic_path):
     raw_pic = pillowImage.open(raw_pic_path)
     return raw_pic
 
-
+# 用pyexiv2读取exif信息
 def load_exif(raw_pic_path):
     raw_exif = exifImage(raw_pic_path).read_exif()
     return raw_exif

@@ -14,7 +14,7 @@
 
 from pyexiv2 import Image
 
-
+#读exif
 def read_exif(input_pic):
     img = Image(input_pic)
     data = img.read_exif()
@@ -22,14 +22,14 @@ def read_exif(input_pic):
     img.close()
     return data
 
-
+#写exif
 def write_exif(exif_data):
     img = Image("output/thumbnail.jpg")
-    img.clear_exif()
+    img.clear_exif()   #这里为防止两套数据冲突清空了已有的原exif
     img.modify_exif(exif_data)
     img.close()
 
-
+# 从原exif中筛选，一些更改，一些用原有的
 def new_exif(exif_data):
     exif_modify = ['Exif.Image.Software']
     exif_retain = ['Exif.Image.Make',

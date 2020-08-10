@@ -16,14 +16,14 @@
 from PIL import Image
 from PIL import ExifTags
 
-
+# 缩略图
 def thumbnail(input_pic, output_pic):
     size = (128, 128)
     im = Image.open(input_pic)
     im.thumbnail(size)
     im.save(output_pic, "JPEG")
 
-
+# 用pillow读取exif
 def read_exif(input_pic):
     im = Image.open(input_pic)
     # im_exif = im.info['exif']
@@ -40,6 +40,7 @@ def read_exif(input_pic):
 
     print(exif_ver.decode())
 
+# 打水印
 def water_mark():
     pass
 
