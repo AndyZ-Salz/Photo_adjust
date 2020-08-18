@@ -16,12 +16,14 @@
 from PIL import Image
 from PIL import ExifTags
 
+
 # 缩略图
 def thumbnail(input_pic, output_pic):
     size = (128, 128)
     im = Image.open(input_pic)
     im.thumbnail(size)
     im.save(output_pic, "JPEG")
+
 
 # 用pillow读取exif
 def read_exif(input_pic):
@@ -40,15 +42,22 @@ def read_exif(input_pic):
 
     print(exif_ver.decode())
 
+
+# 生成全黑图片
+def create_img():
+    width = 300
+    height = 200
+    image = Image.new('RGB', (width, height), (80, 80, 80))
+    image.save("output/Dark_gray.jpg", "jpeg")
+
+
 # 打水印
 def water_mark():
     pass
 
 
-
-
-
 if __name__ == '__main__':
-    demo_pic = "Demo_pic.jpg"
-    thumbnail(demo_pic, "output/thumbnail.jpg")
+    # demo_pic = "Demo_pic.jpg"
+    # thumbnail(demo_pic, "output/thumbnail.jpg")
     # read_exif(demo_pic)
+    create_img()
