@@ -13,7 +13,7 @@
 # 2020/7/5: Create
 
 
-from PIL import Image
+from PIL import Image,ImageDraw, ImageFont
 from PIL import ExifTags
 
 
@@ -53,11 +53,14 @@ def create_img():
 
 # 打水印
 def water_mark():
-    pass
-
+    image = Image.open("output/Dark_gray.jpg")
+    font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 36)
+    draw = ImageDraw.Draw(image)
+    draw.text((10,10),"TEst")
+    image.save("output/water_mark.jpg", "jpeg",align="right")
 
 if __name__ == '__main__':
     # demo_pic = "Demo_pic.jpg"
     # thumbnail(demo_pic, "output/thumbnail.jpg")
     # read_exif(demo_pic)
-    create_img()
+    water_mark()
