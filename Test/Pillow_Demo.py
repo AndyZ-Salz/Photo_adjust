@@ -13,7 +13,7 @@
 # 2020/7/5: Create
 
 
-from PIL import Image,ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 from PIL import ExifTags
 
 
@@ -48,19 +48,25 @@ def create_img():
     width = 300
     height = 200
     image = Image.new('RGB', (width, height), (80, 80, 80))
-    image.save("output/Dark_gray.jpg", "jpeg")
+    image.save("output/Dark_gray.jpg")
 
 
 # 打水印
 def water_mark():
     image = Image.open("output/Dark_gray.jpg")
-    font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 36)
+    font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 50)
     draw = ImageDraw.Draw(image)
-    draw.text((10,10),"TEst")
-    image.save("output/water_mark.jpg", "jpeg",align="right")
+    draw.text((50, 50), "TEST", fill=(20, 20, 20), font=font, align="right")
+
+    image.save("output/water_mark.png")
+    #TODO caution! 保存成jpg时候图片质量劣化严重，正在考虑对策
+
+    image.show()
+
 
 if __name__ == '__main__':
     # demo_pic = "Demo_pic.jpg"
     # thumbnail(demo_pic, "output/thumbnail.jpg")
     # read_exif(demo_pic)
+    # create_img()
     water_mark()
