@@ -18,11 +18,15 @@ from PIL import ExifTags
 
 
 # 缩略图
-def thumbnail(input_pic, output_pic):
+def thumbnail(input_pic):
     size = (128, 128)
     im = Image.open(input_pic)
     im.thumbnail(size)
-    im.save(output_pic, "JPEG")
+    im.save("output/thumbnail.jpg", "JPEG")
+
+    # 保留exif
+    im.save("output/thumbnail_exif.jpg", format="jpeg", exif=im.info['exif'])
+    print(im.info)
 
 
 # 用pillow读取exif
@@ -58,15 +62,18 @@ def water_mark():
     draw = ImageDraw.Draw(image)
     draw.text((50, 50), "TEST", fill=(20, 20, 20), font=font, align="right")
 
-    image.save("output/water_mark.png")
-    #TODO caution! 保存成jpg时候图片质量劣化严重，正在考虑对策
-
-    image.show()
+    # image.save("output/water_mark.png")
+    #
+    # # 不同品质对比
+    # image.save("output/water_mark_q10.jpg",format="jpeg",quality=10)
+    # image.save("output/water_mark_q50.jpg", format="jpeg", quality=50)
+    # image.save("output/water_mark_q75_default.jpg", format="jpeg")
+    image.save("output/water_mark_q95.jpg", format="jpeg", quality=95)
 
 
 if __name__ == '__main__':
     # demo_pic = "Demo_pic.jpg"
-    # thumbnail(demo_pic, "output/thumbnail.jpg")
+    # thumbnail(demo_pic)
     # read_exif(demo_pic)
     # create_img()
     water_mark()

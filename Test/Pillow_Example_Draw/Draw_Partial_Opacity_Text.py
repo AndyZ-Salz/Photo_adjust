@@ -16,13 +16,13 @@ from PIL import Image, ImageDraw, ImageFont
 
 def demo():
     # get an image
-    base = Image.open("Pillow/Tests/images/hopper.png").convert("RGBA") #TODO need to download
+    base = Image.open("hopper.png").convert("RGBA")
 
     # make a blank image for the text, initialized to transparent text color
     txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
 
     # get a font
-    fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 40)
+    fnt = ImageFont.truetype("FreeMono.ttf", 40)
     # get a drawing context
     d = ImageDraw.Draw(txt)
 
@@ -33,7 +33,11 @@ def demo():
 
     out = Image.alpha_composite(base, txt)
 
-    out.show()
+
+    out.save("marked.png")
+
+    out_jpg = out.convert('RGB')
+    out_jpg.save("marked.jpg")
 
 
 if __name__ == '__main__':
