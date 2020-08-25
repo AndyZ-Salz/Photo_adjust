@@ -22,9 +22,14 @@ def load_image(raw_pic_path):
 
 # 用pyexiv2读取exif信息
 def load_exif(raw_pic_path):
-    raw_exif = exifImage(raw_pic_path).read_exif()
+    img = exifImage(raw_pic_path)
+    raw_exif = img.read_exif()
+    img.close() #不调用该方法会导致内存泄漏，但不会锁定文件描述符。
     return raw_exif
 
 
 if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
+    demo_pic2 = "D7000_test.jpg"
+    print(load_exif(demo_pic))
+    print(load_exif(demo_pic2))

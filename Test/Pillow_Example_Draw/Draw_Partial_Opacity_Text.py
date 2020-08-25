@@ -11,6 +11,8 @@
 
 # History:
 # 2020/8/21: Create
+
+
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -32,7 +34,6 @@ def demo():
     d.text((10, 60), "World", font=fnt, fill=(255, 255, 255, 255))
 
     out = Image.alpha_composite(base, txt)
-
 
     out.save("marked.png")
 
