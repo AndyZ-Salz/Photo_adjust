@@ -28,9 +28,13 @@ def load_exif(raw_pic_path):
     img.close() #不调用该方法会导致内存泄漏，但不会锁定文件描述符。
     return raw_exif
 
-# 生成新尺寸图片，返回新的pillow图片对象
-def img_resize(pic_obj,image_width,image_length):
-    pass#TODO 查缩图最好的API
+# 生成新尺寸图片，无需返回
+# this function modifies the Image object in place.
+def img_resize(pic_obj,size_limit):
+    new_size=(size_limit,size_limit)
+    pic_obj.thumbnail(new_size,resample=1) # resample=PIL.Image.LANCZOS
+
+
 
 # 在图片上添加文字，返回新的pillow图片对象
 # TODO 改逻辑
@@ -74,6 +78,11 @@ def img_text_draw(pic_obj,exif):
 if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
     demo_pic2 = "D7000_test.jpg"
+
+    pic_obj =load_image(demo_pic)
     # print(load_exif(demo_pic))
     # print(load_exif(demo_pic2))
-    img_text_draw(load_image(demo_pic),load_exif(demo_pic))
+    # img_text_draw(load_image(demo_pic),load_exif(demo_pic))
+
+    img_resize(pic_obj,1000) #
+    pic_obj.show()
