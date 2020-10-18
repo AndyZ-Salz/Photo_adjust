@@ -3,7 +3,7 @@
 ---------------------------------------
 @file    : Random_Code
 @Version : ??
-@Author  : Andy Zang
+@Author  : web
 @software: PyCharm
 @For     : 
 ---------------------------------------
@@ -51,4 +51,6 @@ for t in range(4):
 # 模糊:
 image = image.filter(ImageFilter.BLUR)
 image.save('output/code.jpg', 'jpeg')
+
+image.show()
 

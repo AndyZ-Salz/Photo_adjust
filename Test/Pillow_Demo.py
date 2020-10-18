@@ -58,7 +58,7 @@ def create_img():
 # 打水印
 def water_mark():
     image = Image.open("output/Dark_gray.jpg")
-    font = ImageFont.truetype('C:/windows/Fonts/Arial.ttf', 50)
+    font = ImageFont.truetype("font/FreeMono.ttf", 50)
     draw = ImageDraw.Draw(image)
     draw.text((50, 50), "TEST", fill=(20, 20, 20), font=font, align="right")
 
