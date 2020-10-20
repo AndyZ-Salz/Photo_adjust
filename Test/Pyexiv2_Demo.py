@@ -18,7 +18,13 @@ from pyexiv2 import Image
 def read_exif(input_pic):
     img = Image(input_pic)
     data = img.read_exif()
-    print(data)
+    print("exif:",data)
+    data2 = img.read_iptc()
+    print("iptc:", data2)
+    data3 = img.read_xmp()
+    print("xmp:", data3)
+    data4 = img.read_raw_xmp()
+    print("raw_xmp:", data4)
     img.close()
     return data
 
@@ -62,8 +68,8 @@ if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
     exif_data = read_exif(demo_pic)
 
-    new_exif_data = new_exif(exif_data)
-    print(new_exif_data)
-
-    write_exif(new_exif_data)
-    read_exif("output/thumbnail.jpg")
+    # new_exif_data = new_exif(exif_data)
+    # print(new_exif_data)
+    #
+    # write_exif(new_exif_data)
+    # read_exif("output/thumbnail.jpg")
