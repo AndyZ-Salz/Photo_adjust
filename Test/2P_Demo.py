@@ -41,7 +41,7 @@ def img_resize(pic_obj, size_limit):
 
 
 # 在图片上添加文字，返回新的pillow图片对象
-# add text in picture, return a pillow's image obj
+# add text in picture, return a new pillow's image obj
 # TODO 改逻辑
 def img_text_draw(pic_obj, exif):
     # get an image
@@ -51,10 +51,11 @@ def img_text_draw(pic_obj, exif):
     text_layer = pillowImage.new("RGBA", base_img.size, (255, 255, 255, 0))
 
     # get a font
-    font_size = 40
+    font_size = 30
+    font_name = "font/世界那么大.ttf"
     # text_font = ImageFont.truetype("Pillow_Example_Draw/FreeMono.ttf", 40)
     # text_font = ImageFont.truetype("C:/Users/AndyZang/Desktop/神韵哈天随性体.ttf", font_size)
-    text_font = ImageFont.truetype("C:/Users/AndyZang/Desktop/网络手写体.ttf", font_size)
+    text_font = ImageFont.truetype(font_name, font_size)
 
     # get a drawing context
     draw_obj = ImageDraw.Draw(text_layer)
@@ -70,9 +71,13 @@ def img_text_draw(pic_obj, exif):
     print(x)  # 宽
     print(y)  # 高
 
-    # draw text #TODO 这里只是演示，后面内容全要改
-    draw_obj.text((830, 580), "Photo by Andy·Z", font=text_font, fill=text_color)
-    draw_obj.text((880, 615), "2020-10-05", font=text_font, fill=text_color)
+    # draw text
+    # two single line
+    # draw_obj.text((830, 580), "Photo by Andy·Z", font=text_font, fill=text_color)
+    # draw_obj.text((880, 615), "2020-10-05", font=text_font, fill=text_color)
+
+    # multiline
+    draw_obj.multiline_text((700, 500), "Photo by Andy·Z\n2020-10-05", font=text_font, fill=text_color, align="right")
 
     # 后处理，与原始图像合并再转回RGB
     out = pillowImage.alpha_composite(base_img, text_layer)
@@ -91,7 +96,6 @@ if __name__ == '__main__':
     # print(load_exif(demo_pic2))
     # img_text_draw(load_image(demo_pic),load_exif(demo_pic))
 
-    pic_obj = load_image("C:/Users/AndyZang/Desktop/DSC_5205.jpg")
-    img_resize(pic_obj, 1050)  #
-    img_text_draw(pic_obj, exif="111").save("C:/Users/AndyZang/Desktop/DSC_5205_water_mark_q95.jpg", format="jpeg",
-                                            quality=95)
+    pic_obj = load_image(demo_pic2)
+    img_resize(pic_obj, 1050)
+    img_text_draw(pic_obj, exif="111").save("output/text_q95.jpg", format="jpeg", quality=95)
