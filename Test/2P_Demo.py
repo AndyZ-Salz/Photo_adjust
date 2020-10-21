@@ -44,6 +44,10 @@ def img_resize(pic_obj, size_limit):
 # add text in picture, return a new pillow's image obj
 # TODO 改逻辑
 def img_text_draw(pic_obj, exif):
+    # set text body
+    # TODO 计算需要显示的文字内容
+    text_body = ""
+
     # get an image
     base_img = pic_obj.convert("RGBA")
 
@@ -68,16 +72,30 @@ def img_text_draw(pic_obj, exif):
 
     # 计算位置
     x, y = base_img.size
-    print(x)  # 宽
-    print(y)  # 高
+    print("img_x:", x)  # 宽
+    print("img_y:", y)  # 高
+
+    # text box
+    print("multi line:", draw_obj.textsize("Photo by Andy·Z\n2020-10-05", font=text_font))
+
+    print("single line1:", draw_obj.textsize("Photo by Andy·Z", font=text_font))
+    print("single line2:", draw_obj.textsize("2020-10-05", font=text_font))
+
+    #x:left or right TODO
+    text_x = 0
+
+    #y:top or bottom TODO
+    text_y = 0
+
+    text_xy = (text_x,text_y)
 
     # draw text
     # two single line
     # draw_obj.text((830, 580), "Photo by Andy·Z", font=text_font, fill=text_color)
     # draw_obj.text((880, 615), "2020-10-05", font=text_font, fill=text_color)
 
-    # multiline
-    draw_obj.multiline_text((700, 500), "Photo by Andy·Z\n2020-10-05", font=text_font, fill=text_color, align="right")
+    # multi line
+    draw_obj.text((700, 500), "Photo by Andy·Z\n2020-10-05", font=text_font, fill=text_color, align="right")
 
     # 后处理，与原始图像合并再转回RGB
     out = pillowImage.alpha_composite(base_img, text_layer)
