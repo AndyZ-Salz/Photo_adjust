@@ -1,2 +1,2 @@
-Pillow==8.0.0
+Pillow==8.0.1
 pyexiv2==2.3.1
