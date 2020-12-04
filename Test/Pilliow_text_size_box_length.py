@@ -13,6 +13,14 @@
 # 2020/10/21: Create
 from PIL import Image, ImageDraw, ImageFont
 
+
+def plus_xy(xy1, xy2):
+    return xy1[0] + xy2[0], xy1[1] + xy2[1]
+
+def plus_bbox_offset(bbox,offset):
+    return bbox[0]+offset[0],bbox[1]+offset[1],bbox[2]+offset[0],bbox[3]+offset[1]
+
+
 if __name__ == '__main__':
     # prepare
     # set text body
@@ -25,9 +33,11 @@ if __name__ == '__main__':
     text_layer = Image.new("RGBA", base_img.size, (255, 255, 255, 0))
 
     # get a font
-    font_size = 45
-    font_name = "font/世界那么大.ttf"
-    # font_name = "font/FreeMono.ttf"
+    font_size = 40
+    # font_name = "font/世界那么大.ttf"
+    font_name = "font/FreeMono.ttf"
+    # font_name = "font/AndyZ_InkPen1.ttf"
+
     text_font = ImageFont.truetype(font_name, font_size)
 
     # set text color
@@ -40,35 +50,35 @@ if __name__ == '__main__':
     draw_obj = ImageDraw.Draw(text_layer)
 
     # size
-    text_size = draw_obj.textsize(text_body,font=text_font)
-    print("text_size:",text_size)
+    text_size = draw_obj.textsize(text_body, font=text_font)
+    print("text_size:", text_size)
 
     # bbox
-    text_bbox = draw_obj.textbbox((0, 0),text_body,font=text_font)
+    text_bbox = draw_obj.textbbox((0, 0), text_body, font=text_font)
     print("text_bbox:", text_bbox)
 
-    print(text_font.getbbox("LINE1:ABQJKP"))
-    
+    # offset
+    text_offset = text_bbox[:2]
+    print("text_offset:", text_offset)
 
     # length # can't measure length of multiline text
-    text_length = draw_obj.textlength("LINE1:ABQJKP",font=text_font)
-    print("text_length:",text_length)
+    text_length = draw_obj.textlength("LINE1:ABQJKP", font=text_font)
+    print("text_length:", text_length)
 
-    # visualization
-    draw_obj.rectangle([(0,0),(base_img.size[0]-1,base_img.size[1]-1)],outline=(25,25,25,255))
+    # anchor coordinates of the text
+    text_xy = (10, 15)
+
+    # visualization master box
+    draw_obj.rectangle([(0, 0), (base_img.size[0] - 1, base_img.size[1] - 1)], outline=(25, 25, 25, 255))
 
     # bbox
-    draw_obj.rectangle(text_bbox, fill=(202, 205, 205, 255))
+    draw_obj.rectangle(plus_bbox_offset(text_bbox,text_xy), fill=(202, 205, 205, 255))
 
     # text
-    draw_obj.text((0, 0), text_body, font=text_font, fill=text_color, align="left")
+    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="left")
 
     # size
-    draw_obj.rectangle([(0, 0), text_size], outline=(0, 255, 0, 255))
-
-
-
-
+    draw_obj.rectangle([text_xy, plus_xy(text_size, text_xy)], outline=(0, 255, 0, 255))
 
     # 后处理，与原始图像合并
     out = Image.alpha_composite(base_img, text_layer)
