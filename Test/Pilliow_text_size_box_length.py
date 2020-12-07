@@ -86,4 +86,4 @@ if __name__ == '__main__':
     # 后处理，与原始图像合并
     out = Image.alpha_composite(base_img, text_layer)
     out.show()
-    out.save("output/text_bbox_q95.jpg", format="jpeg", quality=95)
+    out.save("output/text_bbox_q95.png", format="png", quality=95)
