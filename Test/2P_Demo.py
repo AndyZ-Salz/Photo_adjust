@@ -44,6 +44,7 @@ def img_resize(pic_obj, size_limit):
 # add text in picture, return a new pillow's image obj
 # TODO 改逻辑
 def img_text_draw(pic_obj, exif):
+    print(exif)
     # set text body
     # TODO 计算需要显示的文字内容
     text_body = ""
@@ -116,4 +117,5 @@ if __name__ == '__main__':
 
     pic_obj = load_image(demo_pic2)
     img_resize(pic_obj, 1050)
-    img_text_draw(pic_obj, exif="111").save("output/text_q95.jpg", format="jpeg", quality=95)
+    img_exif = load_exif(demo_pic2)
+    img_text_draw(pic_obj, exif=img_exif).save("output/text_q95.jpg", format="jpeg", quality=95)

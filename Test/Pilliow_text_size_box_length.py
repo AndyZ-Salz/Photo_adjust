@@ -11,14 +11,17 @@
 
 # History:
 # 2020/10/21: Create
+# 2020/12/4: compare text_size and text_bbox
+
 from PIL import Image, ImageDraw, ImageFont
 
 
 def plus_xy(xy1, xy2):
     return xy1[0] + xy2[0], xy1[1] + xy2[1]
 
-def plus_bbox_offset(bbox,offset):
-    return bbox[0]+offset[0],bbox[1]+offset[1],bbox[2]+offset[0],bbox[3]+offset[1]
+
+def plus_bbox_offset(bbox, offset):
+    return bbox[0] + offset[0], bbox[1] + offset[1], bbox[2] + offset[0], bbox[3] + offset[1]
 
 
 if __name__ == '__main__':
@@ -66,13 +69,13 @@ if __name__ == '__main__':
     print("text_length:", text_length)
 
     # anchor coordinates of the text
-    text_xy = (10, 15)
+    text_xy = (0, 0)
 
     # visualization master box
     draw_obj.rectangle([(0, 0), (base_img.size[0] - 1, base_img.size[1] - 1)], outline=(25, 25, 25, 255))
 
     # bbox
-    draw_obj.rectangle(plus_bbox_offset(text_bbox,text_xy), fill=(202, 205, 205, 255))
+    draw_obj.rectangle(plus_bbox_offset(text_bbox, text_xy), fill=(202, 205, 205, 255))
 
     # text
     draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="left")
@@ -83,3 +86,4 @@ if __name__ == '__main__':
     # 后处理，与原始图像合并
     out = Image.alpha_composite(base_img, text_layer)
     out.show()
+    out.save("output/text_bbox_q95.jpg", format="jpeg", quality=95)
