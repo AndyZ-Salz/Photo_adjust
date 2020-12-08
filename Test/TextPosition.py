@@ -19,6 +19,8 @@
 from PIL import ImageDraw
 
 
+# TODO missing align and spacing
+
 class TextPosition:
     # x_type must be "l", "m" or "r"
     # y_type must be "t", "m" or "b"
@@ -84,6 +86,41 @@ class TextPosition:
         x_total, y_total = base_img.size
         output_x, output_y = 0, 0
 
+        # original size
+        original_bbox = ImageDraw.Draw(base_img).textbbox((0, 0), text_body, text_font, spacing=4,
+                                                          align=self.content_align)
+        print("original_bbox=", original_bbox)
+
+        # X axis offset
+        if self.x_type == "l":
+            target_x = 0 + self.x_margin
+            original_x = original_bbox[0]
+
+        elif self.x_type == "r":
+            target_x = x_total - self.x_margin
+            original_x = original_bbox[2]
+
+        else:  # x_type == "m"
+            target_x = int(x_total / 2) + self.x_margin
+            original_x = int((original_bbox[2] + original_bbox[0]) / 2)
+
+        output_x = target_x - original_x
+
+        # Y axis offset
+        if self.y_type == "t":
+            target_y = 0 + self.y_margin
+            original_y = original_bbox[1]
+
+        elif self.y_type == "b":
+            target_y = y_total - self.y_margin
+            original_y = original_bbox[3]
+
+        else:  # y_type == "m"
+            target_y = int(y_total / 2) + self.y_margin
+            original_y = int((original_bbox[3] + original_bbox[1]) / 2)
+
+        output_y = target_y - original_y
+
         return output_x, output_y
 
     def __str__(self):
@@ -92,13 +129,14 @@ class TextPosition:
 
 
 if __name__ == '__main__':
-    xy = TextPosition("l", 10, content_align="center")
-    print(xy)
-
     from PIL import Image, ImageDraw, ImageFont
 
+    text_position = TextPosition("r", 10, "b", 10)
+    font_size = 40
+    font_name = "font/FreeMono.ttf"
 
-    def test_case():
+
+    def test_case(text_position, font_size, font_name):
         # prepare
         # set text body
         text_body = "LINE1:ABQJKP\nline2:abqjkp"
@@ -110,8 +148,6 @@ if __name__ == '__main__':
         text_layer = Image.new("RGBA", base_img.size, (255, 255, 255, 0))
 
         # get a font
-        font_size = 40
-        font_name = "font/FreeMono.ttf"
 
         text_font = ImageFont.truetype(font_name, font_size)
 
@@ -121,7 +157,7 @@ if __name__ == '__main__':
         # get a drawing context
         draw_obj = ImageDraw.Draw(text_layer)
 
-        text_position = TextPosition()
+        print(text_position)
         text_xy = text_position.position(base_img, text_body, text_font)
 
         print("text_xy=", text_xy)
@@ -130,16 +166,22 @@ if __name__ == '__main__':
         draw_obj.rectangle([(0, 0), (base_img.size[0] - 1, base_img.size[1] - 1)], outline=(25, 25, 25, 255))
 
         # bbox
-        text_bbox = draw_obj.textbbox(text_xy, text_body, font=text_font)
+        text_bbox = draw_obj.textbbox(text_xy, text_body, font=text_font,align=text_position.content_align)
         draw_obj.rectangle(text_bbox, fill=(202, 205, 205, 255))
         print("text_bbox:", text_bbox)
 
         # text
-        draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="left")
+        draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align=text_position.content_align)
+
+        # baseline
+        draw_obj.line([(0, base_img.size[1] / 2), (base_img.size[0], base_img.size[1] / 2)], fill=(100, 100, 100, 255),
+                      width=1)
+        draw_obj.line([(base_img.size[0] / 2, 0), (base_img.size[0] / 2, base_img.size[1])], fill=(100, 100, 100, 255),
+                      width=1)
 
         # finish
         out = Image.alpha_composite(base_img, text_layer)
         out.show()
 
 
-    test_case()
+    test_case(text_position, font_size, font_name)
