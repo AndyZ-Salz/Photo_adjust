@@ -12,6 +12,8 @@
 # Basically refer to the CSS's Box Model
 # Margin for position
 # Align for content
+# notice: if set type as "m", the margin for x\y will be the offset from center
+#       (plus for right\down , minus for left\up)
 
 # History:
 # 2020/12/8: Create
@@ -19,30 +21,46 @@
 from PIL import ImageDraw
 
 
-# TODO missing align and spacing
+# TODO missing –stroke_width=0,embedded_color,stroke_fill –
 
 class TextPosition:
     # x_type must be "l", "m" or "r"
     # y_type must be "t", "m" or "b"
     # align must be "left", "center" or "right"
 
-    x_type = "",
-    x_margin = 0,
-    y_type = "",
-    y_margin = 0,
-    content_align = ""
+    # setting text direction, language or font features is not supported without libraqm
+    # direction must be "rtl" (right to left), "ltr" (left to right) or "ttb" (top to bottom).
+
+    x_type = None
+    x_margin = 0
+    y_type = None
+    y_margin = 0
+    text_spacing = 4
+    text_align = None
+    text_direction = None
+    text_features = None
+    text_language = None
 
     def __init__(self,
                  x_type=None,
                  x_margin=0,
                  y_type=None,
                  y_margin=0,
-                 content_align=None):
+                 text_spacing=4,
+                 text_align=None,
+                 text_direction=None,
+                 text_features=None,
+                 text_language=None
+                 ):
         self.set_x_type(x_type)
         self.set_x_margin(x_margin)
         self.set_y_type(y_type)
         self.set_y_margin(y_margin)
-        self.set_content_align(content_align)
+        self.set_text_spacing(text_spacing)
+        self.set_text_align(text_align)
+        self.set_text_direction(text_direction)
+        self.set_text_features(text_features)
+        self.set_text_language(text_language)
 
     def set_x_type(self, new_x_type):
         x_types = ("l", "m", "r")
@@ -74,21 +92,49 @@ class TextPosition:
         else:
             self.y_margin = new_y_margin
 
-    def set_content_align(self, new_align):
+    def set_text_spacing(self, text_spacing):
+        if not isinstance(text_spacing, int):
+            raise ValueError("text_spacing must be a integer")
+        else:
+            self.text_spacing = text_spacing
+
+    def set_text_align(self, new_align):
         if new_align is None:
-            self.content_align = "left"
+            self.text_align = "left"
         elif new_align not in ("left", "center", "right"):
             raise ValueError('align must be "left", "center" or "right"')
         else:
-            self.content_align = new_align
+            self.text_align = new_align
+
+    def set_text_direction(self, new_text_direction):
+        direction_types = ("ltr", "rtl", "ttb")
+        if new_text_direction is None:
+            self.text_direction = None
+        elif new_text_direction not in direction_types:
+            raise ValueError('direction must be "ltr", "rtl" or "ttb"')
+        else:
+            self.text_direction = new_text_direction
+
+    def set_text_features(self, new_text_features):
+        if new_text_features is None:
+            self.text_features = None
+        else:
+            self.text_features = new_text_features
+
+    def set_text_language(self, new_text_language):
+        if new_text_language is None:
+            self.text_language = None
+        else:
+            self.text_language = new_text_language
 
     def position(self, base_img, text_body, text_font):
         x_total, y_total = base_img.size
         output_x, output_y = 0, 0
 
         # original size
-        original_bbox = ImageDraw.Draw(base_img).textbbox((0, 0), text_body, text_font, spacing=4,
-                                                          align=self.content_align)
+        original_bbox = ImageDraw.Draw(base_img).textbbox((0, 0), text_body, text_font, spacing=self.text_spacing,
+                                                          align=self.text_align, direction=self.text_direction,
+                                                          features=self.text_features, language=self.text_language)
         print("original_bbox=", original_bbox)
 
         # X axis offset
@@ -131,9 +177,10 @@ class TextPosition:
 if __name__ == '__main__':
     from PIL import Image, ImageDraw, ImageFont
 
-    text_position = TextPosition("r", 10, "b", 10)
+    text_position = TextPosition("m", 0, "m", 0, 4, "center")
     font_size = 40
-    font_name = "font/FreeMono.ttf"
+    # font_name = "font/FreeMono.ttf"
+    font_name = "font/世界那么大.ttf"
 
 
     def test_case(text_position, font_size, font_name):
@@ -166,12 +213,14 @@ if __name__ == '__main__':
         draw_obj.rectangle([(0, 0), (base_img.size[0] - 1, base_img.size[1] - 1)], outline=(25, 25, 25, 255))
 
         # bbox
-        text_bbox = draw_obj.textbbox(text_xy, text_body, font=text_font,align=text_position.content_align)
+        text_bbox = draw_obj.textbbox(text_xy, text_body, font=text_font, align=text_position.text_align,
+                                      spacing=text_position.text_spacing, direction=text_position.text_direction)
         draw_obj.rectangle(text_bbox, fill=(202, 205, 205, 255))
         print("text_bbox:", text_bbox)
 
         # text
-        draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align=text_position.content_align)
+        draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align=text_position.text_align,
+                      spacing=text_position.text_spacing, direction=text_position.text_direction)
 
         # baseline
         draw_obj.line([(0, base_img.size[1] / 2), (base_img.size[0], base_img.size[1] / 2)], fill=(100, 100, 100, 255),

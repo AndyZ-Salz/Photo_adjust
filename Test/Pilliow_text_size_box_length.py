@@ -38,10 +38,13 @@ if __name__ == '__main__':
     # get a font
     font_size = 40
     # font_name = "font/世界那么大.ttf"
-    font_name = "font/FreeMono.ttf"
-    # font_name = "font/AndyZ_InkPen1.ttf"
+    # font_name = "font/FreeMono.ttf"
+    font_name = "font/AndyZ_InkPen1.ttf"
 
     text_font = ImageFont.truetype(font_name, font_size)
+
+    text_align = "right"
+    text_spacing = 10
 
     # set text color
     text_color = (0  # R
@@ -53,11 +56,11 @@ if __name__ == '__main__':
     draw_obj = ImageDraw.Draw(text_layer)
 
     # size
-    text_size = draw_obj.textsize(text_body, font=text_font)
+    text_size = draw_obj.textsize(text_body, font=text_font,spacing=text_spacing)
     print("text_size:", text_size)
 
     # bbox
-    text_bbox = draw_obj.textbbox((0, 0), text_body, font=text_font)
+    text_bbox = draw_obj.textbbox((0, 0), text_body, font=text_font,spacing=text_spacing,align=text_align)
     print("text_bbox:", text_bbox)
 
     # offset
@@ -78,7 +81,7 @@ if __name__ == '__main__':
     draw_obj.rectangle(plus_bbox_offset(text_bbox, text_xy), fill=(202, 205, 205, 255))
 
     # text
-    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="left")
+    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, spacing=text_spacing,align=text_align)
 
     # size
     draw_obj.rectangle([text_xy, plus_xy(text_size, text_xy)], outline=(0, 255, 0, 255))
