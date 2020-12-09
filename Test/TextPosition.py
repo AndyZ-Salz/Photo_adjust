@@ -30,6 +30,8 @@ class TextPosition:
 
     # setting text direction, language or font features is not supported without libraqm
     # direction must be "rtl" (right to left), "ltr" (left to right) or "ttb" (top to bottom).
+    # features see OpenType docs
+    # language should be a BCP 47 language code.
 
     x_type = None
     x_margin = 0
@@ -40,6 +42,7 @@ class TextPosition:
     text_direction = None
     text_features = None
     text_language = None
+    text_stroke_width = 0
 
     def __init__(self,
                  x_type=None,
@@ -50,7 +53,8 @@ class TextPosition:
                  text_align=None,
                  text_direction=None,
                  text_features=None,
-                 text_language=None
+                 text_language=None,
+                 text_stroke_width=0
                  ):
         self.set_x_type(x_type)
         self.set_x_margin(x_margin)
@@ -61,6 +65,7 @@ class TextPosition:
         self.set_text_direction(text_direction)
         self.set_text_features(text_features)
         self.set_text_language(text_language)
+        self.set_text_stroke_width(text_stroke_width)
 
     def set_x_type(self, new_x_type):
         x_types = ("l", "m", "r")
@@ -127,6 +132,12 @@ class TextPosition:
         else:
             self.text_language = new_text_language
 
+    def set_text_stroke_width(self, new_stroke_width):
+        if not isinstance(new_stroke_width, int):
+            raise ValueError("stroke_width must be a integer")
+        else:
+            self.text_stroke_width = new_stroke_width
+
     def position(self, base_img, text_body, text_font):
         x_total, y_total = base_img.size
         output_x, output_y = 0, 0
@@ -134,7 +145,8 @@ class TextPosition:
         # original size
         original_bbox = ImageDraw.Draw(base_img).textbbox((0, 0), text_body, text_font, spacing=self.text_spacing,
                                                           align=self.text_align, direction=self.text_direction,
-                                                          features=self.text_features, language=self.text_language)
+                                                          features=self.text_features, language=self.text_language,
+                                                          stroke_width=self.text_stroke_width)
         print("original_bbox=", original_bbox)
 
         # X axis offset
@@ -177,7 +189,7 @@ class TextPosition:
 if __name__ == '__main__':
     from PIL import Image, ImageDraw, ImageFont
 
-    text_position = TextPosition("m", 0, "m", 0, 4, "center")
+    text_position = TextPosition("m", 0, "m", 0, 4, "center",text_stroke_width=0)
     font_size = 40
     # font_name = "font/FreeMono.ttf"
     font_name = "font/世界那么大.ttf"
@@ -214,13 +226,13 @@ if __name__ == '__main__':
 
         # bbox
         text_bbox = draw_obj.textbbox(text_xy, text_body, font=text_font, align=text_position.text_align,
-                                      spacing=text_position.text_spacing, direction=text_position.text_direction)
+                                      spacing=text_position.text_spacing, stroke_width=text_position.text_stroke_width)
         draw_obj.rectangle(text_bbox, fill=(202, 205, 205, 255))
         print("text_bbox:", text_bbox)
 
         # text
         draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align=text_position.text_align,
-                      spacing=text_position.text_spacing, direction=text_position.text_direction)
+                      spacing=text_position.text_spacing, stroke_width=text_position.text_stroke_width)
 
         # baseline
         draw_obj.line([(0, base_img.size[1] / 2), (base_img.size[0], base_img.size[1] / 2)], fill=(100, 100, 100, 255),
