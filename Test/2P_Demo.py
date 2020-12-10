@@ -12,10 +12,12 @@
 # History:
 # 2020/7/31: Create
 # 2020/10/8: Use it for pic demo
+# 2020/12/10: import class TextPosition
 
 from PIL import Image as pillowImage
 from pyexiv2 import Image as exifImage
 from PIL import ImageDraw, ImageFont
+import TextPosition
 
 
 # 用pillow读取图片,返回pillow图片对象
@@ -47,7 +49,7 @@ def img_text_draw(pic_obj, exif):
     print(exif)
     # set text body
     # TODO 计算需要显示的文字内容
-    text_body = ""
+    text_body = "Photo by Andy·Z\n2020-10-05"
 
     # get an image
     base_img = pic_obj.convert("RGBA")
@@ -56,10 +58,11 @@ def img_text_draw(pic_obj, exif):
     text_layer = pillowImage.new("RGBA", base_img.size, (255, 255, 255, 0))
 
     # get a font
-    font_size = 30
+    font_size = 40
     font_name = "font/世界那么大.ttf"
-    # text_font = ImageFont.truetype("Pillow_Example_Draw/FreeMono.ttf", 40)
-    # text_font = ImageFont.truetype("C:/Users/AndyZang/Desktop/神韵哈天随性体.ttf", font_size)
+    # font_name = "font/FreeMono.ttf"
+    # font_name = "font/AndyZ_InkPen1.ttf"
+
     text_font = ImageFont.truetype(font_name, font_size)
 
     # get a drawing context
@@ -72,31 +75,14 @@ def img_text_draw(pic_obj, exif):
                   , 255)  # A
 
     # 计算位置
-    x, y = base_img.size
-    print("img_x:", x)  # 宽
-    print("img_y:", y)  # 高
+    text_position = TextPosition.TextPosition("r", 30, "b", 30, 5, "right")
 
-    # text box
-    print("multi line:", draw_obj.textsize("Photo by Andy·Z\n2020-10-05", font=text_font))
+    text_xy = text_position.position(base_img, text_body, text_font)
 
-    print("single line1:", draw_obj.textsize("Photo by Andy·Z", font=text_font))
-    print("single line2:", draw_obj.textsize("2020-10-05", font=text_font))
-
-    #x:left or right TODO
-    text_x = 0
-
-    #y:top or bottom TODO
-    text_y = 0
-
-    text_xy = (text_x,text_y)
+    print(text_xy)
 
     # draw text
-    # two single line
-    # draw_obj.text((830, 580), "Photo by Andy·Z", font=text_font, fill=text_color)
-    # draw_obj.text((880, 615), "2020-10-05", font=text_font, fill=text_color)
-
-    # multi line
-    draw_obj.text((700, 500), "Photo by Andy·Z\n2020-10-05", font=text_font, fill=text_color, align="right")
+    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="right")
 
     # 后处理，与原始图像合并再转回RGB
     out = pillowImage.alpha_composite(base_img, text_layer)
@@ -118,4 +104,4 @@ if __name__ == '__main__':
     pic_obj = load_image(demo_pic2)
     img_resize(pic_obj, 1050)
     img_exif = load_exif(demo_pic2)
-    img_text_draw(pic_obj, exif=img_exif).save("output/text_q95.jpg", format="jpeg", quality=95)
+    img_text_draw(pic_obj, exif=img_exif)  # .save("output/text_q95.jpg", format="jpeg", quality=95)

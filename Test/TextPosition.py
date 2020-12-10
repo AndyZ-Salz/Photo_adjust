@@ -21,7 +21,7 @@
 from PIL import ImageDraw
 
 
-# TODO missing –stroke_width=0,embedded_color,stroke_fill –
+# TODO missing embedded_color,stroke_fill
 
 class TextPosition:
     # x_type must be "l", "m" or "r"
@@ -147,7 +147,6 @@ class TextPosition:
                                                           align=self.text_align, direction=self.text_direction,
                                                           features=self.text_features, language=self.text_language,
                                                           stroke_width=self.text_stroke_width)
-        print("original_bbox=", original_bbox)
 
         # X axis offset
         if self.x_type == "l":
@@ -189,7 +188,7 @@ class TextPosition:
 if __name__ == '__main__':
     from PIL import Image, ImageDraw, ImageFont
 
-    text_position = TextPosition("m", 0, "m", 0, 4, "center",text_stroke_width=0)
+    text_position = TextPosition("m", 0, "m", 0, 4, "center", text_stroke_width=0)
     font_size = 40
     # font_name = "font/FreeMono.ttf"
     font_name = "font/世界那么大.ttf"
