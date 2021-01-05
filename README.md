@@ -6,8 +6,8 @@
 
 ## Python version
 Must Python 3    
-I'm coding on 3.6 & 3.7
+I'm coding on 3.7 & 3.8
 
 ## Module requirements
-Pillow   
+Pillow >= 8.0.0  
 pyexiv2
