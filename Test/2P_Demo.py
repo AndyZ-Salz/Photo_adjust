@@ -13,6 +13,7 @@
 # 2020/7/31: Create
 # 2020/10/8: Use it for pic demo
 # 2020/12/10: import class TextPosition
+# 2021/2/18: Write a basic logic of text body
 
 from PIL import Image as pillowImage
 from pyexiv2 import Image as exifImage
@@ -21,6 +22,7 @@ import TextPosition
 
 
 # 用pillow读取图片,返回pillow图片对象
+# read image by pillow, return a pillowImage obj
 def load_image(raw_pic_path):
     raw_pic = pillowImage.open(raw_pic_path)
     return raw_pic
@@ -35,6 +37,20 @@ def load_exif(raw_pic_path):
     return raw_exif
 
 
+# write exif by pyexiv2 for final image file
+def write_exif(final_pic_path, final_exif):
+    img = exifImage(final_pic_path)
+    img.clear_exif()  # 这里为防止两套数据冲突清空了已有的原exif
+    img.modify_exif(final_exif)
+    img.close()
+
+
+# Select the items that needs to be retained, return a new exif dict
+def exif_filter(raw_exif, keep_list):
+    # TODO exif数据筛选
+    pass
+
+
 # 生成新尺寸图片，无需返回
 # this function modifies the Image object in place.
 def img_resize(pic_obj, size_limit):
@@ -44,12 +60,13 @@ def img_resize(pic_obj, size_limit):
 
 # 在图片上添加文字，返回新的pillow图片对象
 # add text in picture, return a new pillow's image obj
-# TODO 改逻辑
 def img_text_draw(pic_obj, exif):
-    print(exif)
     # set text body
-    # TODO 计算需要显示的文字内容
-    text_body = "Photo by Andy·Z\n2020-10-05"
+    text_lines = []
+    text_lines.append("Photo by Andy·Z")
+    photo_date = exif['Exif.Photo.DateTimeOriginal'].split(" ")[0].replace(":", "-")
+    text_lines.append(photo_date)
+    text_body = '\n'.join(text_lines)  # text_body = "Photo by Andy·Z\n2020-10-05"
 
     # get an image
     base_img = pic_obj.convert("RGBA")
@@ -79,8 +96,6 @@ def img_text_draw(pic_obj, exif):
 
     text_xy = text_position.position(base_img, text_body, text_font)
 
-    print(text_xy)
-
     # draw text
     draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="right")
 
@@ -88,7 +103,6 @@ def img_text_draw(pic_obj, exif):
     out = pillowImage.alpha_composite(base_img, text_layer)
     out_jpg = out.convert('RGB')
 
-    out_jpg.show()
     return out_jpg
 
 
@@ -104,4 +118,9 @@ if __name__ == '__main__':
     pic_obj = load_image(demo_pic2)
     img_resize(pic_obj, 1050)
     img_exif = load_exif(demo_pic2)
-    img_text_draw(pic_obj, exif=img_exif)  # .save("output/text_q95.jpg", format="jpeg", quality=95)
+    output_pic = "output/text_q95.jpg"
+    final_pic = img_text_draw(pic_obj, exif=img_exif)
+    final_pic.save(output_pic, format="jpeg", quality=95)
+    write_exif(output_pic, img_exif)
+
+    final_pic.show()
