@@ -2,7 +2,7 @@
 """
 ---------------------------------------
 @file    : TextPosition
-@Version : ??
+@Version : 1.0
 @Author  : Andy Zang
 @software: PyCharm
 @For     : a class for define text position
