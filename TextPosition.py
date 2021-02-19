@@ -7,6 +7,9 @@
 @software: PyCharm
 @For     : a class for define text position
 ---------------------------------------
+Due to the textbbox offset problem in the ImageDraw module
+This class is used to automatically compensate for the offset and provide a responsive anchor
+See: https://github.com/python-pillow/Pillow/issues/5080
 """
 
 # Basically refer to the CSS's Box Model
@@ -17,6 +20,7 @@
 
 # History:
 # 2020/12/8: Create
+# 2021/2/19: add annotate
 
 from PIL import ImageDraw
 
