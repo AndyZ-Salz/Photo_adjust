@@ -19,18 +19,18 @@ def read_exif(input_pic):
     img = Image(input_pic)
     data = img.read_exif()
     print("exif:",data)
-    data2 = img.read_iptc()
-    print("iptc:", data2)
-    data3 = img.read_xmp()
-    print("xmp:", data3)
-    data4 = img.read_raw_xmp()
-    print("raw_xmp:", data4)
+    # data2 = img.read_iptc()
+    # print("iptc:", data2)
+    # data3 = img.read_xmp()
+    # print("xmp:", data3)
+    # data4 = img.read_raw_xmp()
+    # print("raw_xmp:", data4)
     img.close()
     return data
 
 #写exif
-def write_exif(exif_data):
-    img = Image("output/thumbnail.jpg")
+def write_exif(pic_path,exif_data):
+    img = Image(pic_path)
     img.clear_exif()   #这里为防止两套数据冲突清空了已有的原exif
     img.modify_exif(exif_data)
     img.close()
@@ -68,8 +68,11 @@ if __name__ == '__main__':
     demo_pic = "Demo_pic.jpg"
     exif_data = read_exif(demo_pic)
 
-    # new_exif_data = new_exif(exif_data)
-    # print(new_exif_data)
-    #
-    # write_exif(new_exif_data)
-    # read_exif("output/thumbnail.jpg")
+    new_exif_data = new_exif(exif_data)
+
+    out_pic = "output/Demo_pic_exif.jpg"
+    write_exif(out_pic,new_exif_data)
+    read_exif(out_pic)
+
+
+    read_exif("D7000_test.jpg")
