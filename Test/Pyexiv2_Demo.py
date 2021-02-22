@@ -25,6 +25,10 @@ def read_exif(input_pic):
     # print("xmp:", data3)
     # data4 = img.read_raw_xmp()
     # print("raw_xmp:", data4)
+    # data5 = img.read_comment()
+    # print("comment:",data5)
+    # data6 = img.read_icc()
+    # print("icc:",data6)
     img.close()
     return data
 
