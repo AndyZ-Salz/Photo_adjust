@@ -20,7 +20,7 @@ def demo_ver(input, output):
     PnP_Demo.img_resize(pic_obj, 1050)
     img_exif = PnP_Demo.load_exif(input)
     output_pic = output
-    final_pic = PnP_Demo.img_text_draw(pic_obj, exif=img_exif)
+    final_pic = PnP_Demo.img_sign_text_draw(pic_obj, exif=img_exif)
     final_pic.save(output_pic, format="jpeg", quality=95)
     PnP_Demo.write_exif(output_pic, img_exif)
     # final_pic.show()
