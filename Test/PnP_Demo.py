@@ -75,7 +75,7 @@ def img_text_draw(pic_obj, exif):
     text_layer = pillowImage.new("RGBA", base_img.size, (255, 255, 255, 0))
 
     # get a font
-    font_size = 40
+    font_size = 30
     font_name = "font/世界那么大.ttf"
     # font_name = "font/FreeMono.ttf"
     # font_name = "font/AndyZ_InkPen1.ttf"
