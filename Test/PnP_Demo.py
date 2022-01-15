@@ -67,7 +67,7 @@ def img_sign_text_draw(pic_obj, exif):
     text_lines.append("Photo by Andy·Z")
     photo_date = exif['Exif.Photo.DateTimeOriginal'].split(" ")[0].replace(":", "-")
     text_lines.append(photo_date)
-    text_body = '\n'.join(text_lines)  # text_body = "Photo by Andy·Z\n2020-10-05"
+    text_body = '\n'.join(text_lines)  # text_body = "Photo by Andy·Z\n2021-10-23"
 
     # get an image
     base_img = pic_obj.convert("RGBA")
@@ -111,11 +111,14 @@ def img_sign_text_draw(pic_obj, exif):
 def img_shoot_text_draw(pic_obj, exif):  # TODO rebuild for shoot informatiom
     # set text body
     text_lines = []
-    text_lines.append("Photo by Andy·Z")
-    photo_date = exif['Exif.Photo.DateTimeOriginal'].split(" ")[0].replace(":", "-")
-    text_lines.append(photo_date)
+    photo_camera = ""  # 型号
+    # text_lines.append("Photo by Andy·Z")
+    # photo_date = exif['Exif.Photo.DateTimeOriginal'].split(" ")[0].replace(":", "-")
+    photo_camera = ""  # 焦距
+    photo_camera = ""  # 光圈
+    photo_camera = ""  # 快门
 
-    text_body = '\n'.join(text_lines)  # text_body = "Photo by Andy·Z\n2020-10-05"
+    text_body = '\n'.join(text_lines)  # text_body = "Nikon D5200 \n 105mm \n F2.2 \n 1/1000s"
 
     # get an image
     base_img = pic_obj.convert("RGBA")
@@ -139,12 +142,12 @@ def img_shoot_text_draw(pic_obj, exif):  # TODO rebuild for shoot informatiom
                   , 255)  # A
 
     # 计算位置
-    text_position = TextPosition.TextPosition("r", 30, "b", 30, 5, "right")
+    text_position = TextPosition.TextPosition("l", 30, "b", 30, 5, "left")
 
     text_xy = text_position.position(base_img, text_body, text_font)
 
     # draw text
-    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="right")
+    draw_obj.text(text_xy, text_body, font=text_font, fill=text_color, align="left")
 
     # 后处理，与原始图像合并再转回RGB
     out = pillowImage.alpha_composite(base_img, text_layer)
@@ -155,23 +158,25 @@ def img_shoot_text_draw(pic_obj, exif):  # TODO rebuild for shoot informatiom
 
 # 在图片上添加LOGO，返回新的pillow图片对象
 # add logo in picture, return a new pillow's image obj
-def img_logo_draw(pic_obj):  # TODO logo
+def img_logo_draw(pic_obj, logo_file):  # TODO logo
 
     # get an image
     base_img = pic_obj.convert("RGBA")
 
-    # make a blank image for the text, initialized to transparent text color
+    # make a blank image
     logo_layer = pillowImage.new("RGBA", base_img.size, (255, 255, 255, 0))
 
     # load logo file
+    logo_obj = load_image(logo_file)
+    logo_bbox = pillowImage.Image.getbbox(logo_obj)
+    logo_img = logo_obj.resize(((logo_bbox[2] - logo_bbox[0]), (logo_bbox[3] - logo_bbox[1])), box=logo_bbox)
 
-
-    # 计算位置
-    # text_position = TextPosition.TextPosition("r", 30, "b", 30, 5, "right")
-    #
-    # text_xy = text_position.position(base_img, text_body, text_font)
+    # 计算位置和大小
+    logo_position = (20, 20)
+    img_resize(logo_img, 80)
 
     # draw logo
+    logo_layer.paste(logo_img, box=logo_position)
 
     # 后处理，与原始图像合并再转回RGB
     out = pillowImage.alpha_composite(base_img, logo_layer)
@@ -194,8 +199,9 @@ if __name__ == '__main__':
     img_exif = load_exif(demo_pic2)
     output_pic = "output/text_q95.jpg"
     final_pic = img_sign_text_draw(pic_obj, exif=img_exif)
-    # final_pic = img_shoot_text_draw(pic_obj, exif=img_exif)
-    final_pic = img_logo_draw(final_pic)
+    final_pic = img_shoot_text_draw(final_pic, exif=img_exif)
+    logo_file = "logo/AndyZ_outline_white.png"
+    final_pic = img_logo_draw(final_pic, logo_file)
     final_pic.save(output_pic, format="jpeg", quality=95)
     write_exif(output_pic, img_exif)
 
